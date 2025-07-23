@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: odsquizauth-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: odsquizauth
+  template:
+    metadata:
+      labels:
+        app: odsquizauth
+    spec:
+      containers:
+        - name: odsquizauth
+          image: kauanpecanha/odsquizauth:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odsquizauth-service
+spec:
+  selector:
+    app: odsquizauth
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: odsquizauth-service
+spec:
+  type: NodePort
+  selector:
+    app: odsquizauth
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+      nodePort: 30080
